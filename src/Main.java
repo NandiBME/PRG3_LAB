@@ -10,7 +10,7 @@ import java.util.*;
 
 public class Main {
     public static ArrayList<Beer> beers = new ArrayList<>();
-    protected static void Add(String[] input) throws IOException
+    protected static void Add(String[] input)
     {
         beers.add(new Beer(input[0],input[1],Double.parseDouble(input[2])));
     }
@@ -75,20 +75,77 @@ public class Main {
         reader.close();
 
     }
-    protected static void Search(String input)
+    protected static void Search(String[] input)
     {
-        for (Beer beer :
-                beers) {
-            if (beer.name.equals(input))
-                System.out.println(beer);
+        if(input.length==2) {
+            for (Beer beer :
+                    beers) {
+                if (beer.name.equals(input[1]))
+                    System.out.println(beer);
+            }
+        }
+        else{
+            if(input[1].equals("name"))
+            {
+                for (Beer beer :
+                        beers) {
+                    if (beer.name.equals(input[2]))
+                        System.out.println(beer);
+                }
+            }
+            if(input[1].equals("style"))
+            {
+                for (Beer beer :
+                        beers) {
+                    if (beer.style.equals(input[2]))
+                        System.out.println(beer);
+                }
+            }
+            if(input[1].equals("strength"))
+            {
+                for (Beer beer :
+                        beers) {
+                    if (beer.getStrength()==Double.parseDouble(input[2]))
+                        System.out.println(beer);
+                }
+            }
         }
     }
-    protected static void Find(String input)
+    protected static void Find(String[] input)
     {
+        if(input.length==2)
         for (Beer beer :
                 beers) {
-            if (beer.name.contains(input))
+            if (beer.name.contains(input[1]))
                 System.out.println(beer);
+        }
+        else{
+            if(input[1].equals("name"))
+            for (Beer beer :
+                    beers) {
+                if (beer.name.contains(input[2]))
+                    System.out.println(beer);
+            }
+            else if (input[1].equals("style")) {
+                for (Beer beer :
+                        beers) {
+                    if (beer.style.contains(input[2]))
+                        System.out.println(beer);
+                }
+            } else if (input[1].equals("strength")) {
+                for (Beer beer :
+                        beers) {
+                    if (beer.getStrength()>=Double.parseDouble(input[2]))
+                        System.out.println(beer);
+                }
+                
+            } else if (input[1].equals("weaker")) {
+                for (Beer beer :
+                        beers) {
+                    if (beer.getStrength()<Double.parseDouble(input[2]))
+                        System.out.println(beer);
+                }
+            }
         }
     }
     protected static void Delete(String[] input)
@@ -103,6 +160,30 @@ public class Main {
             }
         }
     }
+    protected static void Test()
+    {
+        PQueue<String> q = new PQueue();
+        q.push("alma");
+        q.push("körte");
+        q.push("narancs");
+        q.push("barack");
+        try {
+            System.out.println("Push: alma, körte, narancs, barack");
+            System.out.println("Hossz: "+ q.size());
+            System.out.println("Pop: "+ q.pop());
+            System.out.println("Top: "+ q.top());
+            System.out.println("Hossz: "+ q.size());
+            q.clear();
+            System.out.println("Clear: ");
+            System.out.println("Hossz: "+ q.size());
+        } catch (EmptyQueueException e) {
+            throw new RuntimeException(e);
+        }
+        PQueue<Integer> s = new PQueue<Integer>();
+        s.push(1); s.push(2); s.push(3); s.push(4);
+        for (Integer i : s) System.out.println(i);
+
+    }
 
     public static void main(String[] args) throws IOException {
         Scanner be= new Scanner(System.in);
@@ -116,11 +197,9 @@ public class Main {
                 case "exit":
                     System.exit(0);
                 case "add":
-                    if(length==4) try {
-                        String[] arg = {temp[1], temp[2],temp[3]};
+                    if(length==4) {
+                        String[] arg = {temp[1], temp[2], temp[3]};
                         Add(arg);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
                     }
                     else
                         System.out.println("Wrong input\n\tadd {name} {style} {strength}");
@@ -134,15 +213,19 @@ public class Main {
                 case "save":
                     try{Save();} catch (IOException e){System.out.println("Error");}
                     break;
-                case "search":
-                    Search(temp[1]);
+                case "search"://megegyezik a paraméterrel temp[1]
+                    Search(temp);
                     break;
-                case "find":
-                    Find(temp[1]);
+                case "find"://Szerepel benne a paraméter temp[1]
+                    Find(temp);
                     break;
                 case "delete":
                     Delete(temp);
                     break;
+                case "test":
+                    Test();
+                    break;
+
                 default:
                     System.out.println("Wrong input");
             }
